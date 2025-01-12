@@ -4,8 +4,10 @@ import { ProductsCollection } from '../db/models/products.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
 export const getAllProducts = async ({
+  keyword = '',
+  category = '',
   page = 1,
-  perPage = 10,
+  perPage = 9,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
@@ -13,19 +15,17 @@ export const getAllProducts = async ({
   const limit = perPage;
     const skip = (page - 1) * perPage;
 
-    console.log('Category filter:', filter.category);
-
-  const productsQuery = ProductsCollection.find();
-  if (filter.category) {
-    productsQuery.where('category').equals(filter.category);
+    const productsQuery = ProductsCollection.find();
+  if (category) {
+    productsQuery.where('category').equals(category);
     }
 
-  if (filter.name) {
-    productsQuery.where('name').equals(filter.name);
+  if (keyword) {
+    productsQuery.where('name').regex(new RegExp(keyword, 'i'));
     }
 
   const [productsCount, products] = await Promise.all([
-    ProductsCollection.find().merge(productsQuery).countDocuments(),
+    ProductsCollection.countDocuments({ ...filter }),
     productsQuery
       .skip(skip)
       .limit(limit)
@@ -45,6 +45,6 @@ export const getProductById = async (productId) => {
   const product = await ProductsCollection.findOne({
     _id: new Types.ObjectId(productId),
   });
-    
+
   return product;
 };
