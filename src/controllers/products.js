@@ -1,11 +1,11 @@
-import { getAllProducts, getProductById } from '../services/products.js';
+import { getAllCategories, getAllProducts, getProductById } from '../services/products.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { keyword, category, page, perPage } = parsePaginationParams(
+    const { page, perPage } = parsePaginationParams(
       req.query,
     );
     const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -14,8 +14,6 @@ export const getAllProductsController = async (req, res, next) => {
     const products = await getAllProducts({
       page,
       perPage,
-      keyword,
-      category,
       sortBy,
       sortOrder,
       filter,
@@ -50,6 +48,21 @@ export const getProductByIdController = async (req, res, next) => {
       data: product,
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllCategoriesController = async (req, res, next) => {
+  try {
+    const categories = await getAllCategories();
+    
+    res.status(200).json({
+      status: '200',
+      message: 'Successfully fetched categories!',
+      data: categories,
+    });
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     next(error);
   }
 };

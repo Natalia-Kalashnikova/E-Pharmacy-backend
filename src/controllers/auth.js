@@ -23,17 +23,24 @@ export const registerUserController = async (req, res) => {
 
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
+
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
+    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
   });
+
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
+        sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
   });
+
   res.json({
     status: 200,
-    message: 'Successfully logged in an user!',
+    message: 'Successfully logged in a user!',
     data: {
       accessToken: session.accessToken,
     },
@@ -44,8 +51,17 @@ export const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
     await logoutUser(req.cookies.sessionId);
   }
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
+
+   res.clearCookie('sessionId', {
+    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
+   });
+
+   res.clearCookie('refreshToken', {
+    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
+   });
+
   res.status(204).send();
 };
 
@@ -53,10 +69,15 @@ const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
+    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
   });
+
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
+    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
   });
 };
 
@@ -67,6 +88,7 @@ export const refreshUserSessionController = async (req, res) => {
   }
   const session = await refreshUsersSession({ sessionId, refreshToken });
   setupSession(res, session);
+
   res.json({
     status: 200,
     message: 'Successfully refreshed a session!',
@@ -78,6 +100,7 @@ export const refreshUserSessionController = async (req, res) => {
 
 export const requestResetEmailController = async (req, res) => {
   await requestResetToken(req.body.email);
+
   res.json({
     message: 'Reset password email was successfully sent!',
     status: 200,
@@ -87,6 +110,7 @@ export const requestResetEmailController = async (req, res) => {
 
 export const resetPasswordController = async (req, res) => {
   await resetPassword(req.body);
+
   res.json({
     message: 'Password was successfully reset!',
     status: 200,
@@ -96,6 +120,7 @@ export const resetPasswordController = async (req, res) => {
 
 export const getGoogleOAuthUrlController = async (req, res) => {
   const url = generateAuthUrl();
+
   res.json({
     status: 200,
     message: 'Successfully get Google OAuth url!',
@@ -108,6 +133,7 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 export const loginWithGoogleController = async (req, res) => {
   const session = await loginOrSignupWithGoogle(req.body.code);
   setupSession(res, session);
+
   res.json({
     status: 200,
     message: 'Successfully logged in via Google OAuth!',
@@ -121,6 +147,7 @@ export const getUserInfoController = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = await getUserInfo(userId);
+
     res.status(200).json({
       status: '200',
       message: 'User info fetched successfully!',
