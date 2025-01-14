@@ -20,7 +20,7 @@ export const setupServer = () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: 'http://localhost:5173',
+      origin: 'https://e-pharmacy-client-five.vercel.app',
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,

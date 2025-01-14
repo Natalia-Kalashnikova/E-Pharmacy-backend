@@ -28,14 +28,14 @@ export const loginUserController = async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
     sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
         sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
   });
 
   res.json({
@@ -54,12 +54,12 @@ export const logoutUserController = async (req, res) => {
 
    res.clearCookie('sessionId', {
     sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
    });
 
    res.clearCookie('refreshToken', {
     sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
    });
 
   res.status(204).send();
@@ -70,14 +70,14 @@ const setupSession = (res, session) => {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
     sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
     sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
   });
 };
 

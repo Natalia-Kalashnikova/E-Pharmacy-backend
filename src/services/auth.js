@@ -22,10 +22,29 @@ export const registerUser = async (payload) => {
 
     const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-  return await UsersCollection.create({
+  const newUser = await UsersCollection.create({
     ...payload,
     password: encryptedPassword,
   });
+
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+  await SessionsCollection.create({
+    userId: newUser._id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+  });
+  return {
+    user: {
+      id: newUser._id,
+      email: newUser.email,
+      name: newUser.name,
+    },
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const loginUser = async (payload) => {
