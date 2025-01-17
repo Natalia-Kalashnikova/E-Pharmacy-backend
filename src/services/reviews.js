@@ -8,19 +8,19 @@ export const getAllReviews = async ({
   sortOrder = 'ASC',
   sortBy = '_id',
 }) => {
-    const skip = (page - 1) * perPage;
+  const skip = (page - 1) * perPage;
 
   const reviewsQuery = ReviewsCollection.find({ userId })
     .skip(skip)
     .limit(perPage)
-        .sort({ [sortBy]: sortOrder });
+    .sort({ [sortBy]: sortOrder });
 
-    const reviewsCount = await ReviewsCollection.countDocuments({ userId });
+  const reviewsCount = await ReviewsCollection.countDocuments({ userId });
 
-    const reviews = await reviewsQuery.exec();
+  const reviews = await reviewsQuery.exec();
 
-    const paginationData = calculatePaginationData(reviewsCount, perPage, page);
-    
+  const paginationData = calculatePaginationData(reviewsCount, perPage, page);
+
   return {
     data: reviews,
     ...paginationData,

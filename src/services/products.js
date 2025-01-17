@@ -11,16 +11,16 @@ export const getAllProducts = async ({
   filter = {},
 }) => {
   const limit = perPage;
-    const skip = (page - 1) * perPage;
+  const skip = (page - 1) * perPage;
 
-    const productsQuery = ProductsCollection.find();
+  const productsQuery = ProductsCollection.find();
   if (filter.category) {
     productsQuery.where('category').equals(filter.category);
-    }
+  }
 
   if (filter.name) {
     productsQuery.where('name').regex(new RegExp(filter.name, 'i'));
-    }
+  }
 
   const [productsCount, products] = await Promise.all([
     ProductsCollection.countDocuments({ ...filter }),
@@ -31,7 +31,7 @@ export const getAllProducts = async ({
       .exec(),
   ]);
 
-    const paginationData = calculatePaginationData(productsCount, perPage, page);
+  const paginationData = calculatePaginationData(productsCount, perPage, page);
 
   return {
     data: products,

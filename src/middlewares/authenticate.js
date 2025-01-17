@@ -40,7 +40,7 @@ export const authenticate = async (req, res, next) => {
     next(createHttpError(401, 'User not found'));
     return;
   }
-  
+
   req.user = user;
   next();
 };

@@ -34,7 +34,7 @@ export const loginUserController = async (req, res) => {
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + ONE_DAY),
-        sameSite: 'None',
+    sameSite: 'None',
     secure: true,
   });
 
@@ -52,15 +52,15 @@ export const logoutUserController = async (req, res) => {
     await logoutUser(req.cookies.sessionId);
   }
 
-   res.clearCookie('sessionId', {
+  res.clearCookie('sessionId', {
     sameSite: 'None',
     secure: true,
-   });
+  });
 
-   res.clearCookie('refreshToken', {
+  res.clearCookie('refreshToken', {
     sameSite: 'None',
     secure: true,
-   });
+  });
 
   res.status(204).send();
 };

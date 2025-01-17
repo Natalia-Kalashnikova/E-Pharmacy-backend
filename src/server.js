@@ -2,11 +2,11 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
 import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import cookieParser from 'cookie-parser';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
@@ -20,7 +20,10 @@ export const setupServer = () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: ['http://localhost:5173', 'https://e-pharmacy-client-five.vercel.app'],
+      origin: [
+        'http://localhost:5173',
+        'https://e-pharmacy-client-five.vercel.app',
+      ],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,

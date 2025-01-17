@@ -5,41 +5,41 @@ import { OrderCollection } from '../db/models/orders.js';
 export const updateCart = async (req, res, next) => {
   try {
     const userId = req.user._id;
-      const { productId, quantity } = req.body;
+    const { productId, quantity } = req.body;
 
     if (quantity < 0) {
       return res.status(400).json({ message: 'Quantity must be at least 0' });
     }
 
-      const product = await ProductsCollection.findById(productId);
+    const product = await ProductsCollection.findById(productId);
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-      const cart = await CartCollection.findOne({ userId });
+    const cart = await CartCollection.findOne({ userId });
 
-     if (!cart) {
+    if (!cart) {
       if (quantity === 0) {
         return res
           .status(400)
           .json({ message: 'Cannot create cart with quantity 0' });
       }
 
-       const newCart = new CartCollection({
+      const newCart = new CartCollection({
         userId,
         items: [{ product, quantity }],
       });
 
       await newCart.save();
       return res.status(201).json({ message: 'Cart created and item added' });
-      }
+    }
 
     const itemIndex = cart.items.findIndex((item) =>
       item.product._id.equals(productId),
     );
 
-   if (quantity === 0) {
+    if (quantity === 0) {
       if (itemIndex !== -1) {
         cart.items.splice(itemIndex, 1);
       } else {
@@ -68,7 +68,7 @@ export const getCartItems = async (req, res, next) => {
 
     if (!cart) {
       return res.status(200).json({ data: [], message: 'Cart is empty' });
-      }
+    }
 
     res.status(200).json({
       status: '200',
@@ -106,7 +106,8 @@ export const checkoutCart = async (req, res, next) => {
 
     res.status(201).json({
       message: 'Order placed successfully',
-      orderId: newOrder._id, });
+      orderId: newOrder._id,
+    });
   } catch (error) {
     next(error);
   }

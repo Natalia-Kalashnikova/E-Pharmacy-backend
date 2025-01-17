@@ -1,13 +1,15 @@
-import { getAllCategories, getAllProducts, getProductById } from '../services/products.js';
+import {
+  getAllCategories,
+  getAllProducts,
+  getProductById,
+} from '../services/products.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { page, perPage } = parsePaginationParams(
-      req.query,
-    );
+    const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
 
@@ -30,7 +32,7 @@ export const getAllProductsController = async (req, res, next) => {
 };
 
 export const getProductByIdController = async (req, res, next) => {
-    try {
+  try {
     const { productId } = req.params;
     const product = await getProductById(productId);
 
@@ -55,7 +57,7 @@ export const getProductByIdController = async (req, res, next) => {
 export const getAllCategoriesController = async (req, res, next) => {
   try {
     const categories = await getAllCategories();
-    
+
     res.status(200).json({
       status: '200',
       message: 'Successfully fetched categories!',

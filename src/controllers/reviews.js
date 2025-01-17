@@ -22,7 +22,6 @@ export const getAllReviewsController = async (req, res, next) => {
       message: 'Successfully found reviews!',
       data: reviews,
     });
-
   } catch (error) {
     next(error);
   }

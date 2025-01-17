@@ -11,9 +11,9 @@ export const getAllStores = async ({
   sortBy = '_id',
 }) => {
   const limit = perPage;
-    const skip = (page - 1) * perPage;
+  const skip = (page - 1) * perPage;
 
-    const storesQuery = StoresCollection.find({ userId });
+  const storesQuery = StoresCollection.find({ userId });
 
   const [storesCount, stores] = await Promise.all([
     StoresCollection.find().merge(storesQuery).countDocuments(),
@@ -24,7 +24,7 @@ export const getAllStores = async ({
       .exec(),
   ]);
 
-    const paginationData = calculatePaginationData(storesCount, perPage, page);
+  const paginationData = calculatePaginationData(storesCount, perPage, page);
 
   return {
     data: stores,
@@ -34,7 +34,7 @@ export const getAllStores = async ({
 
 export const getNearestStores = async () => {
   try {
-      const stores = await NearestStoreSchemaCollection.find();
+    const stores = await NearestStoreSchemaCollection.find();
 
     return stores;
   } catch (error) {
